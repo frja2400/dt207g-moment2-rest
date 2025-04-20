@@ -21,8 +21,23 @@ app.post("/api/workexperience", (req, res) => {
     //Plocka ut data från JSON-body. Om req.body inte finns (t.ex. vid felaktig request), använd ett tomt objekt som fallback för att undvika crash.
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body || {};
 
+    //Adderar ett mer detaljerat felmeddelande.
+    let errors = {
+        message: "",
+        detail: "",
+        https_response: {
+
+        }
+    };
+
     if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
-        return res.status(400).json({ error: "Fyll i alla fält" });
+
+        errors.message = "Alla fällt är inte ifyllda."
+        errors.detail = "Du måste fylla i alla fällt."
+        errors.https_response.message = "Bad request";
+        errors.https_response.code = 400;
+
+        return res.status(400).json(errors);
     }
 
     let workexperience = {
