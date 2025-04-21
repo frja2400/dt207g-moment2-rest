@@ -24,7 +24,7 @@ Tabellen `workexperience`:
 | enddate     | DATE           | NOT NULL       | Datum när arbetet avslutades                     |
 | description | TEXT           | *(valfri)*     | Beskrivning av arbetsuppgifter
 
-# Användning
+## Användning
 
 Nedan finns beskrivet hur man nå APIet på olika vis:
 
@@ -38,6 +38,7 @@ Nedan finns beskrivet hur man nå APIet på olika vis:
 
 Ett kurs-objekt returneras/skickas som JSON med följande struktur:
 
+```json
 {
    "companyname": "Mittuniversitetet",
    "jobtitle": "Lärare",
