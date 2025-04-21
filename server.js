@@ -4,6 +4,7 @@ const cors = require('cors');
 const { Client } = require('pg');
 const port = process.env.PORT || 10000;
 require('dotenv').config();
+const path = require('path');
 
 app.use(cors());
 //Alla inkommande requests som har Content-Type: application/json - läs in innehållet, tolka det som JSON och lägg det som ett objekt i i req.body.
