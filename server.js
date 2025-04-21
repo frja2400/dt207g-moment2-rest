@@ -1,11 +1,34 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const { Client } = require('pg');
 const port = process.env.PORT || 3000;
+require('dotenv').config();
 
 app.use(cors());
 //Alla inkommande requests som har Content-Type: application/json - läs in innehållet, tolka det som JSON och lägg det som ett objekt i i req.body.
 app.use(express.json());
+
+//Anslut till databas
+const client = new Client({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+client.connect((err) => {
+    if (err) {
+        console.log("Det gick inte att ansluta: " + err);
+        return;
+    }
+
+    console.log("Ansluten till databas");
+});
 
 //Routes
 app.get("/api", (req, res) => {
@@ -13,7 +36,20 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/api/workexperience", (req, res) => {
-    res.json({message: "Hämta workexperience"});
+    
+    //Hämta workexperience
+    client.query(`SELECT * FROM workexperience`, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: "Något gick fel: " + err });
+        }
+
+        //Results.rows innehåller arrayen med rader
+        if (results.rows.length === 0) {
+            return res.status(200).json([]);  //Tom array om inga rader finns
+        } else {
+            return res.json(results.rows); //Returnera raderna som JSON
+        }
+    });
 });
 
 app.post("/api/workexperience", (req, res) => {
