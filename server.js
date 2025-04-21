@@ -31,6 +31,13 @@ client.connect((err) => {
 });
 
 //Routes
+
+//Skickar index.html som svar på en HTTP-fråga för att tydligt visa för besökare att det är en backend-applikation.
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  });
+
+
 app.get("/api", (req, res) => {
     res.json({ message: "Välkommen till mitt API" });
 });
@@ -146,7 +153,7 @@ app.delete("/api/workexperience/:id", (req, res) => {
     });
 });
 
-
+//'0.0.0.0' säkerställer du att din applikation accepterar inkommande anslutningar från alla nätverksgränssnitt.
 app.listen(port, '0.0.0.0', () => {
     console.log('Server körs på port: ' + port);
 });

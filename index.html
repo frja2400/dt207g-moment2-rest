@@ -1,23 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
+    <title>Express API</title>
 </head>
+
 <body>
-    <h1>Testsida för express API</h1>
-    <script>
-        getData();
-        async function getData() {
-
-            //Måste skriva IP-adress istället för localhost och ändra till port 3000 där min server körs.
-            const response = await fetch("http://127.0.0.1:3000/api/workexperience");
-
-            const data = await response.json();
-
-            console.log(data);
-        }
-    </script>
+    <p>Denna applikation tillhandahåller ett REST API för arbetslivserfarenhet. För att interagera med API:et, använd en
+        API-klient som Thunder Client eller Postman.</p>
 </body>
+
 </html>
