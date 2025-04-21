@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const { Client } = require('pg');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 require('dotenv').config();
 
 app.use(cors());
@@ -147,6 +147,6 @@ app.delete("/api/workexperience/:id", (req, res) => {
 });
 
 
-app.listen(port, () => {
-    console.log('Server är startad på port: ' + port);
+app.listen(port, '0.0.0.0', () => {
+    console.log('Server körs på port: ' + port);
 });

@@ -6,7 +6,7 @@ Grundläggande funktionalitet för CRUD (Create, Read, Update, Delete) är imple
 
 ## Länk
 
-En liveversion av API:t finns tillgänglig på följande URL:
+En liveversion av API:t finns tillgänglig på följande URL: https://dt207g-moment2-rest.onrender.com/
 
 ## Installation, databas
 
