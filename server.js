@@ -32,11 +32,11 @@ client.connect((err) => {
 
 //Routes
 app.get("/api", (req, res) => {
-    res.json({message: "Välkommen till mitt API"});
+    res.json({ message: "Välkommen till mitt API" });
 });
 
 app.get("/api/workexperience", (req, res) => {
-    
+
     //Hämta workexperience
     client.query(`SELECT * FROM workexperience`, (err, results) => {
         if (err) {
@@ -66,6 +66,7 @@ app.post("/api/workexperience", (req, res) => {
         }
     };
 
+    //Validering
     if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
 
         errors.message = "Alla fällt är inte ifyllda."
@@ -76,24 +77,73 @@ app.post("/api/workexperience", (req, res) => {
         return res.status(400).json(errors);
     }
 
-    let workexperience = {
-        companyname,
-        jobtitle,
-        location,
-        startdate,
-        enddate,
-        description
-    };
+    //Addera workexperience till databas
+    client.query(`INSERT INTO workexperience (companyname, jobtitle, location, startdate, enddate, description) VALUES ($1, $2, $3, $4, $5, $6)`,
+        [companyname, jobtitle, location, startdate, enddate, description], (err, results) => {
+            if (err) {
+                return res.status(500).json({ error: "Något gick fel: " + err });
+            }
 
-    res.json({ message: "Workexperience adderad", workexperience });
+            let workexperience = {
+                companyname,
+                jobtitle,
+                location,
+                startdate,
+                enddate,
+                description
+            };
+
+            res.json({ message: "Workexperience adderad", workexperience });
+
+        });
 });
 
 app.put("/api/workexperience/:id", (req, res) => {
-    res.json({message: "Workexperience uppdaterad: " + req.params.id});
+    
+    //Uppdatera en befintlig post i databasen baserat på ID från URL-parametern
+    const id = req.params.id;
+    const { companyname, jobtitle, location, startdate, enddate, description } = req.body || {};
+
+    //Validering
+    if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
+        return res.status(400).json({ error: "Alla fält måste vara ifyllda för att uppdatera." });
+    }
+
+    const query = `
+        UPDATE workexperience
+        SET companyname = $1, jobtitle = $2, location = $3, startdate = $4, enddate = $5, description = $6
+        WHERE id = $7
+    `;
+
+    client.query(query, [companyname, jobtitle, location, startdate, enddate, description, id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Något gick fel vid uppdatering: " + err });
+        }
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Ingen post hittades med id: " + id });
+        }
+
+        res.json({ message: "Workexperience uppdaterad", updatedId: id });
+    });
 });
 
 app.delete("/api/workexperience/:id", (req, res) => {
-    res.json({message: "Workexperience raderad: " + req.params.id});
+    
+    //Ta bort en post med angivet ID. Om ID inte finns, skicka 404.
+    const id = req.params.id;
+
+    client.query(`DELETE FROM workexperience WHERE id = $1`, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Något gick fel vid radering: " + err });
+        }
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Ingen post hittades att radera med id: " + id });
+        }
+
+        res.json({ message: "Workexperience raderad", deletedId: id });
+    });
 });
 
 
